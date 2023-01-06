@@ -1,13 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("Movement")]
     [SerializeField] Movement3D movement;
     [SerializeField] CameraRotation rotation;
 
+    [Header("Interaction")]
+    [SerializeField] float interactionRadius;
+
     private void Update()
+    {
+        Movement();
+        Rotate();
+        Interaction();
+    }
+    private void Movement()
     {
         // 이동.
         float x = Input.GetAxisRaw("Horizontal");
@@ -25,7 +36,9 @@ public class Player : MonoBehaviour
         // 점프.
         if (Input.GetKeyDown(KeyCode.Space))
             movement.Jump();
-
+    }
+    private void Rotate()
+    {
         // 수평 회전.
         float mouseX = Input.GetAxis("Mouse X");
         rotation.RotateHorizontal(mouseX);
@@ -38,4 +51,50 @@ public class Player : MonoBehaviour
         float zoom = Input.GetAxis("Mouse ScrollWheel");
         rotation.CameraZoom(zoom);
     }
+    private void Interaction()
+    {
+        IInteraction interaction = null;
+
+        // 상호작용 대상을 찾는다.
+        Collider[] targets = Physics.OverlapSphere(transform.position, interactionRadius);
+        if(targets.Length > 0)
+        {
+            // OrderBy : 오름차순 정렬(Linq)
+            // 기준을 거리로 잡았다.
+            var find = from target in targets
+                       where target.GetComponent<IInteraction>() != null
+                       orderby Vector3.Distance(transform.position, target.transform.position)
+                       select target;
+
+            if(find.Count() > 0)
+                interaction = find.First().GetComponent<IInteraction>();                
+        }
+
+        // 값의 유무에 따른 처리.
+        if(interaction == null)
+        {
+            InteractionUI.instance.ClosePanel();
+        }
+        else
+        {
+            InteractionUI.instance.OpenPanel(interaction.Name);
+            if(Input.GetKeyDown(KeyCode.F))
+            {
+                interaction.OnInteraction();
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, interactionRadius);
+    }
+}
+
+
+
+public interface IInteraction
+{
+    public string Name { get; }
+    public void OnInteraction();
 }
