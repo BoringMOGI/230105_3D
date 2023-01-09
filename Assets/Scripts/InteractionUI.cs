@@ -13,6 +13,7 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] Text contentText;
 
     RectTransform contentRect;
+    Transform target;
 
     private void Awake()
     {
@@ -23,13 +24,22 @@ public class InteractionUI : MonoBehaviour
         contentRect = contentText.GetComponent<RectTransform>();
         SwitchPanel(false);
     }
-
-    public void OpenPanel(string context)
+    private void Update()
     {
+        // 타겟이 있다면 해당 타겟의 월드 좌표를 스크린 좌표로 변환시켜 대입.
+        if (target != null)
+            transform.position = Camera.main.WorldToScreenPoint(target.position);
+    }
+
+    public void OpenPanel(string context, Transform target)
+    {
+
         // 매개변수 문자열을 텍스트에 대입.
         // 해당 문자열의 너비만큼 사이즈 조정.
         contentText.text = context;
         contentRect.sizeDelta = new Vector2(contentText.preferredWidth, contentRect.sizeDelta.y);
+
+        this.target = target;
 
         SwitchPanel(true);
     }

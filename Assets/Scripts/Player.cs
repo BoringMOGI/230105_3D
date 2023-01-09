@@ -12,11 +12,18 @@ public class Player : MonoBehaviour
     [Header("Interaction")]
     [SerializeField] float interactionRadius;
 
+    bool isLockControl;     // 플레이어 제어 불가능.
+
     private void Update()
     {
-        Movement();
-        Rotate();
-        Interaction();
+        if (!isLockControl)
+        {
+            Movement();
+            Rotate();
+            Interaction();
+        }
+
+        ControlMenu();
     }
     private void Movement()
     {
@@ -57,7 +64,7 @@ public class Player : MonoBehaviour
 
         // 상호작용 대상을 찾는다.
         Collider[] targets = Physics.OverlapSphere(transform.position, interactionRadius);
-        if(targets.Length > 0)
+        if (targets.Length > 0)
         {
             // OrderBy : 오름차순 정렬(Linq)
             // 기준을 거리로 잡았다.
@@ -66,22 +73,31 @@ public class Player : MonoBehaviour
                        orderby Vector3.Distance(transform.position, target.transform.position)
                        select target;
 
-            if(find.Count() > 0)
-                interaction = find.First().GetComponent<IInteraction>();                
+            if (find.Count() > 0)
+                interaction = find.First().GetComponent<IInteraction>();
         }
 
         // 값의 유무에 따른 처리.
-        if(interaction == null)
+        if (interaction == null)
         {
             InteractionUI.instance.ClosePanel();
         }
         else
         {
-            InteractionUI.instance.OpenPanel(interaction.Name);
-            if(Input.GetKeyDown(KeyCode.F))
+            InteractionUI.instance.OpenPanel(interaction.Name, interaction.transform);
+            if (Input.GetKeyDown(KeyCode.F))
             {
                 interaction.OnInteraction();
             }
+        }
+    }
+
+    private void ControlMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            isLockControl = InventoryUI.Instance.SwitchInventory();
+            Cursor.lockState = isLockControl ? CursorLockMode.None : CursorLockMode.Locked;
         }
     }
 
@@ -89,6 +105,8 @@ public class Player : MonoBehaviour
     {
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
+
+
 }
 
 
@@ -96,5 +114,7 @@ public class Player : MonoBehaviour
 public interface IInteraction
 {
     public string Name { get; }
+    public Transform transform { get; }
+
     public void OnInteraction();
 }

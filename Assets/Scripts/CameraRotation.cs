@@ -15,6 +15,14 @@ public class CameraRotation : MonoBehaviour
 
     float rotateX;
 
+    private void Start()
+    {
+        // None : 언락.
+        // Locked : 마우스가 중앙으로 고정된다.
+        // Confined : 마우스 가두기.
+        //Cursor.lockState = CursorLockMode.Locked;
+    }
+
     public void RotateHorizontal(float x)
     {
         body.Rotate(Vector3.up * x * sencitivityX);
