@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] Inventory inven;
+
     [Header("Movement")]
     [SerializeField] Movement3D movement;
     [SerializeField] CameraRotation rotation;
 
     [Header("Interaction")]
     [SerializeField] float interactionRadius;
+
 
     bool isLockControl;     // 플레이어 제어 불가능.
 
@@ -87,7 +90,7 @@ public class Player : MonoBehaviour
             InteractionUI.instance.OpenPanel(interaction.Name, interaction.transform);
             if (Input.GetKeyDown(KeyCode.F))
             {
-                interaction.OnInteraction();
+                interaction.OnInteraction(gameObject);
             }
         }
     }
@@ -96,6 +99,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
+            InventoryUI.Instance.UpdateItem(inven);
             isLockControl = InventoryUI.Instance.SwitchInventory();
             Cursor.lockState = isLockControl ? CursorLockMode.None : CursorLockMode.Locked;
         }
@@ -116,5 +120,5 @@ public interface IInteraction
     public string Name { get; }
     public Transform transform { get; }
 
-    public void OnInteraction();
+    public void OnInteraction(GameObject order);
 }

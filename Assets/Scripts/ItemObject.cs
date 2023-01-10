@@ -10,9 +10,15 @@ public class ItemObject : MonoBehaviour, IInteraction
 
     public string Name => (item == null) ? "이름 없음" : item.name;
 
-    public void OnInteraction()
+    public void OnInteraction(GameObject order)
     {
-        Destroy(gameObject);
+        // 요청자가 인벤토리를 들고 있는지 확인한다.
+        Inventory inven = order.GetComponent<Inventory>();
+
+        // 들고 있다면 인벤토리에 아이템 대입을 시도하고
+        // 대입에 성공했다면 오브젝트를 삭제한다.
+        if(inven != null && inven.AddItem(item))
+            Destroy(gameObject);
     }
 
     public void Setup(Item item)
