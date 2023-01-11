@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
     [SerializeField] Inventory inven;
 
     [Header("Movement")]
@@ -17,6 +19,10 @@ public class Player : MonoBehaviour
 
     bool isLockControl;     // 플레이어 제어 불가능.
 
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Update()
     {
         if (!isLockControl)
