@@ -9,10 +9,14 @@ public class ItemSlotUI : MonoBehaviour
     [SerializeField] Image selectedImage;
 
     Item item;
+    RectTransform rectTransform;
 
     // 오브젝트가 활성활 될 때마다 호출.
     private void OnEnable()
     {
+        if(rectTransform == null)
+            rectTransform = GetComponent<RectTransform>();
+
         OnDeselectedSlot();
     }
 
@@ -36,10 +40,20 @@ public class ItemSlotUI : MonoBehaviour
     {
         // 선택 이미지 활성화.
         selectedImage.enabled = true;
+        if (item != null)
+        {
+            Vector3 position = rectTransform.position;
+            position.y -= rectTransform.sizeDelta.y / 2f;
+            InventoryUI.Instance.ShowContext(item.content, position);
+        }
     }
     public void OnDeselectedSlot()
     {
         // 선택 이미지 비활성화.
-        selectedImage.enabled = false;
+        if (selectedImage.enabled)
+        {
+            selectedImage.enabled = false;
+            InventoryUI.Instance.Close();
+        }
     }
 }

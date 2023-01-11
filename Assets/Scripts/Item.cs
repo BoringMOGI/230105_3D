@@ -16,16 +16,15 @@ public class Item
     {
         id = -1;            // 기본 생성자는 id가 -1이다.
     }
-    public Item(int id, string name, string content, int count)
-    {
-        this.id = id;
-        this.name = name;
-        this.content = content;
-        this.count = count;
-    }
     public Item GetCopy()
     {
         // 나와 동일한 값을 가지는 새로운 객체를 반환.
-        return new Item(id, name, content, count);
+        Item copy = new Item();
+        copy.id = id;
+        copy.sprite = sprite;
+        copy.name = name;
+        copy.content = content;
+        count = 1;
+        return copy;
     }
 }
