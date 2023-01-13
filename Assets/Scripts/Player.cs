@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,35 +11,62 @@ public class Player : MonoBehaviour
     [SerializeField] Inventory inven;
 
     [Header("Movement")]
+    [SerializeField] Animator anim;
     [SerializeField] Movement3D movement;
     [SerializeField] CameraRotation rotation;
 
     [Header("Interaction")]
     [SerializeField] float interactionRadius;
 
-
+    MeleeAttack attackable;
+    float inputX;
+    float inputY;
     bool isLockControl;     // 플레이어 제어 불가능.
 
     private void Awake()
     {
         Instance = this;
     }
+    private void Start()
+    {
+        attackable = GetComponent<MeleeAttack>();
+    }
     private void Update()
     {
+        inputX = 0;
+        inputY = 0;
+
         if (!isLockControl)
         {
             Movement();
             Rotate();
+            AttackTo();
             Interaction();
         }
 
         ControlMenu();
+    }
+    private void LateUpdate()
+    {
+        anim.SetFloat("x", inputX);
+        anim.SetFloat("y", inputY);
+        anim.SetBool("isMove", (inputX != 0) || (inputY != 0));
+    }
+
+    public void AttackTo()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            attackable.OnAttack();
+        }
     }
     private void Movement()
     {
         // 이동.
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
+        inputX = x;
+        inputY = y;
 
         // 2D처럼 시점이 고정된 환경이 아니라
         // 회전이 들어가는 3D에서는
