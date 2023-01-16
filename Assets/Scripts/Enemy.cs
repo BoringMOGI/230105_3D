@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour
@@ -29,6 +30,8 @@ public class Enemy : MonoBehaviour
 
     public string Name => name;
 
+    NavMeshAgent agent;
+
     bool isChaseToPlayer;       // 플레이어를 추격하는가?
     bool isAttackToPlayer;      // 플레이어를 공격하는가?
     bool isChangedState;        // 상태가 변했는가?
@@ -43,6 +46,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         originPoint = transform.position;
+        agent = GetComponent<NavMeshAgent>();
     }
     void Update()
     {
@@ -55,7 +59,7 @@ public class Enemy : MonoBehaviour
             state = STATE.Chase;
         else if (isChaseToPlayer && isAttackToPlayer)
             state = STATE.Attack;
-        else if (Vector3.Distance(transform.position, patrolPoint) > 0f)
+        else if (agent.remainingDistance > 0f)      // 목적지까지의 거리가 0보다 클 경우.
             state = STATE.Patrol;
         else
             state = STATE.Idle;
@@ -86,15 +90,18 @@ public class Enemy : MonoBehaviour
         {
             Vector2 randomUnitCircle = (Random.insideUnitCircle * patrolRadius);
             patrolPoint = originPoint + new Vector3(randomUnitCircle.x, 0f, randomUnitCircle.y);
+            agent.SetDestination(patrolPoint);
         }
     }
     private void OnPatrol()
     {
-        transform.position = Vector3.MoveTowards(transform.position, patrolPoint, moveSpeed * Time.deltaTime);
+        agent.SetDestination(patrolPoint);
+        //transform.position = Vector3.MoveTowards(transform.position, patrolPoint, moveSpeed * Time.deltaTime);
     }
     private void OnChase()
     {
-        transform.position = Vector3.MoveTowards(transform.position, Player.Instance.transform.position, moveSpeed * Time.deltaTime);
+        agent.SetDestination(Player.Instance.transform.position);
+        //transform.position = Vector3.MoveTowards(transform.position, Player.Instance.transform.position, moveSpeed * Time.deltaTime);
     }
     private void OnAttack()
     {
@@ -127,5 +134,8 @@ public class Enemy : MonoBehaviour
         // 공격범위.
         UnityEditor.Handles.color = Color.red;
         UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, attackRadius);
+
+        // 순찰지점.
+        Gizmos.DrawSphere(patrolPoint, 0.5f);
     }
 }

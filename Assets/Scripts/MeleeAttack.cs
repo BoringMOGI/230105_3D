@@ -10,6 +10,7 @@ public class MeleeAttack : MonoBehaviour
     [SerializeField] float attackRate;
     [SerializeField] float attackPower;
     [SerializeField] LayerMask attackMask;
+    [SerializeField] ParticleSystem hitPrefab;
 
     Collider meleeCollider;
     float rateTime;
@@ -29,7 +30,7 @@ public class MeleeAttack : MonoBehaviour
 
         // 충돌체에게 Status가 없거나 attackMask에 layer가 포함되어있지 않을 경우.
         // &는 And연산으로 값이 0이라는 것은 layerMask에 레이어가 포함되어있지 않다.
-        if (target == null || (target.gameObject.layer & attackMask) == 0)
+        if (target == null || (1 << target.gameObject.layer & attackMask) == 0)
             return;
 
         // 공격 대상에게 attackPower를 전달한 후 최종 데미지 리턴.
@@ -38,6 +39,10 @@ public class MeleeAttack : MonoBehaviour
         // 충돌한 지점에 대해 데미지 표기.
         Vector3 hitPoint = collision.contacts[0].point;
         DamageEffectUI.Instance.ShowDamage(hitPoint, damage);
+
+        // 충돌 지점에 히트 이펙트 생성.
+        ParticleSystem hitFx = Instantiate(hitPrefab);
+        hitFx.transform.position = hitPoint;
     }
     public void OnAttack()
     {
@@ -52,19 +57,16 @@ public class MeleeAttack : MonoBehaviour
         anim.SetTrigger("onAttack");
     }
 
-    private void OnStartAttack()
+    public void OnStartAttack()
     {
         meleeCollider.enabled = true;
     }
-    private void OnEndAttack()
+    public void OnEndAttack()
     {
         meleeCollider.enabled = false;
     }
-
-    private void OnEndUpperMask()
+    public void OnEndUpperMask()
     {
         anim.SetLayerWeight(1, 0f);
     }
-
-
 }

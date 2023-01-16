@@ -139,6 +139,20 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnStartAttack()
+    {
+        attackable.OnStartAttack();
+    }
+    private void OnEndAttack()
+    {
+        attackable.OnEndAttack();
+    }
+    private void OnEndUpperMask()
+    {
+        attackable.OnEndUpperMask();
+    }
+
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
