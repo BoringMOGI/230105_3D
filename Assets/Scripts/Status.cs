@@ -15,10 +15,10 @@ public class Status : MonoBehaviour
     public float Hp => hp;
     public float MaxHp => maxHp;
 
-    public void TakeDamage(float power)
+    public float TakeDamage(float power)
     {
         if (hp <= 0)
-            return;
+            return 0;
 
         onTakeDamage?.Invoke(power);                // 데미지 이벤트 호출.
         hp = Mathf.Clamp(hp - power, 0, maxHp);     // 체력 감소.
@@ -26,5 +26,7 @@ public class Status : MonoBehaviour
         {
             onDead?.Invoke();                       // 사망 이벤트 호출.
         }
+
+        return power;
     }
 }

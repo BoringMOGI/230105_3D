@@ -8,17 +8,14 @@ public class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
 
-    [SerializeField] Inventory inven;
-
-    [Header("Movement")]
-    [SerializeField] Animator anim;
-    [SerializeField] Movement3D movement;
-    [SerializeField] CameraRotation rotation;
-
-    [Header("Interaction")]
+    [SerializeField] MeleeAttack attackable;
     [SerializeField] float interactionRadius;
 
-    MeleeAttack attackable;
+    CameraRotation rotation;
+    Movement3D movement;
+    Inventory inven;
+    Animator anim;
+
     float inputX;
     float inputY;
     bool isLockControl;     // 플레이어 제어 불가능.
@@ -29,7 +26,10 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        attackable = GetComponent<MeleeAttack>();
+        rotation = GetComponent<CameraRotation>();
+        movement = GetComponent<Movement3D>();
+        inven = GetComponent<Inventory>();
+        anim = GetComponent<Animator>();
     }
     private void Update()
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Enemy : MonoBehaviour, IInteraction
+public class Enemy : MonoBehaviour
 {
     public enum STATE
     {
@@ -17,9 +17,6 @@ public class Enemy : MonoBehaviour, IInteraction
     [SerializeField] new string name;
     [SerializeField] Transform uiPivot;     // ui가 출력될 기준점.
 
-    [Header("Event")]
-    [SerializeField] UnityEvent onDead;     // 적이 죽었을 때 호출되는 이벤트 함수.
-
     [Header("Enemy")]
     [SerializeField] STATE state;
     [SerializeField] float patrolRadius;    // 순찰 범위.
@@ -31,7 +28,6 @@ public class Enemy : MonoBehaviour, IInteraction
     [SerializeField] float attackRate;      // 공격 속도.
 
     public string Name => name;
-    Transform IInteraction.transform => uiPivot;
 
     bool isChaseToPlayer;       // 플레이어를 추격하는가?
     bool isAttackToPlayer;      // 플레이어를 공격하는가?
@@ -41,15 +37,8 @@ public class Enemy : MonoBehaviour, IInteraction
     float attackTime = 0f;      // 공격 시간.
     Vector3 originPoint;        // 최초 부활 지점.
     Vector3 patrolPoint;        // 정찰 지점.
-    Transform target;           // 공격 대상.
 
     STATE beforeState;          // 이전 상태.
-
-    void IInteraction.OnInteraction(GameObject order)
-    {
-        onDead?.Invoke();
-        Destroy(gameObject);
-    }
 
     void Start()
     {
@@ -123,6 +112,7 @@ public class Enemy : MonoBehaviour, IInteraction
             Debug.Log("플레이어 공격");
         }
     }
+
 
     private void OnDrawGizmosSelected()
     {
