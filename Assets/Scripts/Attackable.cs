@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attackable : MonoBehaviour
+public abstract class Attackable : MonoBehaviour
 {
-    public void OnAttack()
-    {
+    [SerializeField] protected Animator anim;
 
-    }
+    // 공격을 한다. 그럼 필요한게 무엇인가?
+    // 1.공격할 대상
+    // 2.공격 방법.
+    public abstract void AttackTo(Damageable target);
 }
