@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum TEAM
+{
+    Red,            // 레드팀.
+    Blue,           // 블루팀.
+    Enutrality,     // 중립.
+}
+
+
 [RequireComponent(typeof(Attackable))]
 [RequireComponent(typeof(Status))]
 public abstract class NaviController : MonoBehaviour
@@ -15,12 +23,15 @@ public abstract class NaviController : MonoBehaviour
         Targetting,     // 정확하게 특정한 적을 타게팅.
     }
 
+    [SerializeField] protected TEAM team;
+    [SerializeField] protected LayerMask targetMask;
+
+    protected Status status;    // 스테이터스.
+
     NavMeshAgent agent;     // 네브메쉬.
     Attackable weapon;      // 무기(공격자)
-    Damageable target;      // 공격 대상.
+    ITarget target;         // 공격 대상.
     STATE state;            // 상태.
-
-    protected Status status;   // 스테이터스.
 
     // 목적지에 도착했는가?
     bool isReached
@@ -82,7 +93,7 @@ public abstract class NaviController : MonoBehaviour
     private void OnMoveAttack()
     {
         // 목표지점까지 이동하면서 공격 대상을 찾는다.
-        Damageable searchTarget = SearchTarget();
+        ITarget searchTarget = SearchTarget();
 
         if (searchTarget != null)
         {
@@ -124,13 +135,13 @@ public abstract class NaviController : MonoBehaviour
         agent.SetDestination(destination);
         state = isMoveAttack ? STATE.MoveAttack : STATE.MoveOnly;
     }
-    protected void SetTarget(Damageable target)
+    protected void SetTarget(ITarget target)
     {
         this.target = target;
         state = STATE.Targetting;
     }
 
     protected abstract void OnIdle();
-    protected abstract Damageable SearchTarget();
+    protected abstract ITarget SearchTarget();
 
 }

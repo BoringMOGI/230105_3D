@@ -139,4 +139,12 @@ public class Status : MonoBehaviour
         Mp = Mathf.Clamp(Mp - value, 0, MaxMp);
         return true;
     }
+
+
+#if UNITY_EDITOR
+    public void EditUpdateFinal()
+    {
+        final = origin + grow;
+    }
+#endif
 }
