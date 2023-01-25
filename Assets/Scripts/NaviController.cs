@@ -38,6 +38,8 @@ public abstract class NaviController : MonoBehaviour
     {
         get
         {
+            // agent.pathPending : bool
+            // => 경로를 검색하고 있는 중인가?
             if (!agent.pathPending)
             {
                 // 목적지까지의 남은거리가 멈추는 거리보다 적을 경우.
@@ -141,7 +143,7 @@ public abstract class NaviController : MonoBehaviour
         state = STATE.Targetting;
     }
 
+    // 추상 함수 : 선언만 되어있고 실제 구현은 없는 함수.
     protected abstract void OnIdle();
     protected abstract ITarget SearchTarget();
-
 }
