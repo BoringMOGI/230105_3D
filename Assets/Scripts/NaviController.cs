@@ -34,7 +34,7 @@ public abstract class NaviController : MonoBehaviour
     STATE state;            // 상태.
 
     // 목적지에 도착했는가?
-    bool isReached
+    protected bool isReached
     {
         get
         {

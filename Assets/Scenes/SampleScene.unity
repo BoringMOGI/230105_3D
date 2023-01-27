@@ -495,7 +495,7 @@ GameObject:
   m_Component:
   - component: {fileID: 545115674}
   m_Layer: 0
-  m_Name: Path
+  m_Name: Path1
   m_TagString: Untagged
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -526,7 +526,7 @@ GameObject:
   m_Component:
   - component: {fileID: 575277753}
   m_Layer: 0
-  m_Name: Path
+  m_Name: Path2
   m_TagString: Untagged
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -889,6 +889,7 @@ MonoBehaviour:
   MeleePrefab: {fileID: 380323712488783974, guid: 0d14ab6a877fcf34494108e934736cf8, type: 3}
   RangePrefab: {fileID: 7397717727548816356, guid: 6e16c7e3521c1da46b1ccd4f6facf365, type: 3}
   pathPivots:
+  - {fileID: 2045197625}
   - {fileID: 545115674}
   - {fileID: 575277753}
   createRate: 0.2

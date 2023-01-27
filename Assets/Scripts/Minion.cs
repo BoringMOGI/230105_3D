@@ -15,12 +15,21 @@ public class Minion : NaviController, ITarget
         this.paths = new Queue<Vector3>(paths);     // 경로를 Queue로 받는다.
     }
 
-    // 가만 서있게 되는 경우.
-    // 미니언은 다시 목적지를 향해 간다.
+    // 미니언이 Idle상태가 되는 경우.
+    // 1.목적지에 도착했을 때.
+    // 2.타겟을 잃었을 때.
     protected override void OnIdle()
     {
-        Vector3 destination = paths.Peek();
-        SetDestination(destination, true);
+        // 미니언이 목적지에 도착했다면
+        if(isReached)
+        {
+            // 경로 하나를 제거하고 경로가 남아있다면 목적지 설정.            
+            if(paths.Count > 0)
+                paths.Dequeue();
+            Queue<int>
+            if (paths.Count > 0)
+                SetDestination(paths.Peek(), true);
+        }
     }
 
     protected override ITarget SearchTarget()
